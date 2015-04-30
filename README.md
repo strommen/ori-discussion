@@ -17,13 +17,16 @@ So, with that (admittedly giant) assumption, here are the differences I found wh
 
 I think we can resolve all of these differences so that wikimedia serves the same content to all users, whether they're logged in or not.  I was hoping to show you a code diff that would accomplish this, but frankly I ran out of time.  So instead I'll just explain to you how I think this can be done:
 
-For #1, rather than rendering user-specific CSS links into the head, we could render a static link to a dynamically-generated user-specific CSS file (e.g. `<link rel="stylesheet" href="/UserCss.php" />`).  This PHP handler would return all the CSS for that user, concatenated.  For anonymous users, this response would be cached by Squid/Varnish.
+####\#1 CSS Links in `<head>`
+Rather than rendering user-specific CSS links, we could render a static link to a dynamically-generated user-specific CSS file (e.g. `<link rel="stylesheet" href="/UserCss.php" />`).  The PHP handler for this would return all the CSS for that user, concatenated.  For anonymous users, this response would be cached by Squid/Varnish (for others, it could be cached in the browser).
 
-For #2 and #6, the same approach could be applied to the user-specific JavaScript.  Having three separate requests to the app server would probably slow down the first page load for authenticated users, but subsequent navigation could be lightning quick.
+####\#2 and #6 Inline JavaScript
+The same approach as the CSS could be applied to the user-specific JavaScript.  Having three separate requests to the app server (for head CSS, head JavaScript, and body JavaScript) would probably slow down the first page load for authenticated users, but subsequent navigation could be lightning quick.
 
-For #4 and #5, SkinTemplate could be modified to always include the content for both anonymous and logged-in users.  Then, the invalid links can be hidden via CSS (this logic would have to be included in the user-specific CSS generator). 
-  
-I'm sure that I'm missing some other use cases of how wikimedia renders differently for authenticated vs. anonymous, but I think this might be a good start. 
+####\#4 and #5 Dynamic Content in the DOM
+SkinTemplate could be modified to always include the content for both anonymous and logged-in users.  Then, the invalid links can be hidden via CSS or JavaScript (this logic would have to be included in the user-specific CSS generator).  Some of the content would have to be populated in JavaScript (e.g. the user name in the user link text), but sensible defaults could be chosen for noscript users.
+
+I'm sure that I'm missing some other use cases of how wikimedia renders differently for authenticated vs. anonymous visitors, but I think this might be a good start. 
 
 Thanks
 Joe
