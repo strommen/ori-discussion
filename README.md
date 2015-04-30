@@ -29,4 +29,5 @@ SkinTemplate could be modified to always include the content for both anonymous 
 I'm sure that I'm missing some other use cases of how wikimedia renders differently for authenticated vs. anonymous visitors, but I think this might be a good start. 
 
 Thanks
+
 Joe
